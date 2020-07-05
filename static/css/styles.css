@@ -13,6 +13,10 @@
         width: 100%;
     }
     
+    h1 {
+        color: rgb(214, 176, 63);
+    }
+    
     #icon {
         width: 65%;
         height: 55%;
