@@ -1,29 +1,24 @@
-{% load bootstrap3 %} {% load static %}
+{% load bootstrap4 %} {% load static%}
 <!DOCTYPE html>
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>SnapGram</title>
-
-    <!--styles-->
-    {% block styles %}
+    <meta charset="utf-8"> {% if title %}
+    <title> Image Gallery - {{title}}</title>
+    {% else %}
+    <title> Image Gallery </title>
+    {% endif %} {% block styles %}
+    <link href="https://fonts.googleapis.com/css?family=Grand+Hotel" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
     <link rel="shortcut icon" href="../../../static/imgs/logo.png" />
     <link rel="stylesheet" href="{%static 'css/index.css' %}"> {% bootstrap_css %} {% endblock %}
 </head>
 
-<body style='background-color:black'>
-
-    {% include 'registration/login.html' %}
-
-    <!--content-->
-    {% block content %} {%endblock%}
-
-
-    <!--scripts-->{% block scripts %}
+<body>
+    {% include "navbar.html" %} {% block content %} {%endblock%} {% block scripts %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ucarecdn.com/libs/widget/3.6.1/uploadcare.min.js" charset="utf-8"></script>
     {% bootstrap_javascript %} {% endblock %}
 
 </body>

@@ -1,39 +1,61 @@
-{% load static %} {% load bootstrap3 %}
+{% load static %}
+<link href="https://fonts.googleapis.com/css?family=Archivo+Narrow|Charmonman|Kodchasan|Dancing+Script|Spirax" rel="stylesheet">
 
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-</head>
-
-<body>
-    <nav id='main' class='navbar navbar-inverse'>
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a href="{% url 'home' %}"><img id='icon' src="../../static/imgs/logo2.gif" alt="icon"></a>
-            </div>
-            <div id='search' class="col-sm-4">
-                <form id='search' class='navbar-right' class='navbar-form' role='search' action="{% url 'search_results' %}">
-                    <div class="input-group">
-                        <input type="text" class='form-control' placeholder="Search User" name='user'>
-                        <div class="input-group-btn">
-                            <button id='searchButton' class='btn btn-default' type='submit'><span class="glyphicon glyphicon-search"></span></button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class='action-icons' style="position: absolute; right: 0;">
-                <button type='submit' class='gicons'><a href="{% url 'new_post' %}"><span class="glyphicon glyphicon-pencil"></span></a></button>
-                <button type='submit' class='gicons'><a href="{% url 'home' %}"><span class="glyphicon glyphicon-fire"></span></a></button>
-                <button type='submit' class='gicons'><a href="{% url 'profile' id=request.user.id %}"><span class="glyphicon glyphicon-user"></span></a></button>
-                <button type='submit' class='gicons'><a href="/logout"><span class="glyphicon glyphicon-log-out"></span></a></button>
-            </div>
+<nav class="navbar bg-light ">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'imgs/logo2.gif' %}" style="height:30px;width:36px;">
+            </a>
+            <a class="navbar-brand" id="victor" href="{% url 'home' %}">Instagram
+      </a>
         </div>
-    </nav>
-</body>
+        <div class="col-sm-6 col-md-6">
+            {% if user.is_authenticated %}
 
-</html>
+            <li style="font-family: 'Oswald', sans-serif;">
+                <a href="{%url 'edit_profile'%}">Update Profile</a>
+            </li>
+
+            <li style="font-family: 'Oswald', sans-serif;">
+                <a href="{% url 'individual_profile_page' user.id %}">My Profile</a>
+            </li>
+            <li style="font-family: 'Oswald', sans-serif;">
+                <a href="{%url 'new_image'%}">Upload</a>
+            </li>
+            <li style="font-family: 'Oswald', sans-serif;">
+                <a href="/accounts/password/change">Change Password</a>
+            </li>
+
+            <li style="font-family: 'Oswald', sans-serif;">
+                <a href="/logout">Logout</a>
+            </li>
+
+            {% else %}
+            <li style="font-family: 'Oswald', sans-serif;">
+                <a class='btn btn-default' href="/accounts/login">Login</a>
+            </li>
+
+            <li style="font-family: 'Oswald', sans-serif;">
+                <a class='btn btn-default' href="/accounts/register">Register</a>
+            </li>
+
+            {% endif %}
+        </div>
+
+        <!-- Adding a search form  -->
+        <div class="col-sm-4 col-md-4 navbar-right">
+
+            <form class="navbar-form" role="search" action="{% url 'search_results' %}">
+
+                <div class="input-group">
+                    <input type="text" class="form-control mr-sm-4" placeholder="Search User" name="user">
+                    <div class="input-group-btn">
+                        <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Find</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</nav>
