@@ -1,0 +1,20 @@
+body {
+    background-image: url('../imgs/backdrop.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow-x: hidden;
+}
+
+#register {
+    width: 400px;
+}
+
+#login-image {
+    width: 60%;
+    height: 50%;
+}
+
+.post {
+    margin: auto;
+    width: 65%;
+}
