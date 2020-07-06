@@ -156,7 +156,6 @@ CLOUDINARY_STORAGE = {
 }
 
 
-
 # Email configurations remember to install python-decouple
 EMAIL_USE_TLS = config('EMAIL_USE_TLS')
 EMAIL_HOST = config('EMAIL_HOST')
@@ -170,7 +169,6 @@ ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window
 LOGIN_URL = "/accounts/login/" # this is the name of the url
 LOGOUT_REDIRECT_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/" 
-
 
 
 # Configure Django App for Heroku.

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Insta</title>
+</head>
+<body>
+  <br><br>
+  <main role="main" class="container">
+    <br>
+    <div class="row">
+      <div class="col-md-8">
+        {% for post in posts%}
+        <article class="media content-section" id="h">
+          <img class="rounded-circle article-img" src="{{ post.profile.profile_picture.url}}" alt="hello profile_pic">
+          <!-- <img class="rounded-circle account-img" src="{{user.profile.profile_picture.url}}"> -->
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ post.profile }}</a>
+              <small class="text-muted">{{ post.date_posted|timesince}}</small>
+            </div>
+            <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.image_name }}</a></h2>
+            <img src="{{post.image.url}}" class="img-responsive" id="image">
+            <div class="iconic ml-2">
+              <a class='info' href="{% url 'likePost' post.id %}">
+                <i class="fas fa-heart" style="font-size: 20px; margin-left: 15px;margin-top: 15px;"></i>
+              </a><span style="font-size:25px;">{{post.likes.count}}</span>
+
+              <a class="text-info ml-3" href="{% url 'commenting' post.id%}"><i class="fa fa-comment"></i>
+                {{post.comments.all.count}} {{post.comments.all.pluralize}}</a>
+            </div>
+            <div class="comment mt-2">
+                <form action="{% url 'comment' post.id %}" method="post" enctype="multipart/form-data"> 
+                  {%csrf_token%}
+                  {{CommentForm}}
+                  <input type="submit" class="btn btn-info"  value="Comment">
+                </form>
+              </div>
+            <br>
+  
+            <p>{{ post.caption }}</p> 
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+      <div class="col-md-4">
+        <div class="content-section" id="col">
+          <p class='text-muted' style="text-align: center"> Our Stories.
+            {% for post in posts %}
+            <div class="list-group">
+              <a href="#" class="list-group-item list-group-item-light"><img src = "{{ post.profile.profile_picture.url }}" class = "img-responsive img-insta">{{ post.profile.user.username }}</a>
+              <!-- <br>
+              <p class='text-muted'>People you can Follow.
+                <li class="list-group-item list-group-item-light">Follow</li> -->
+            </div>
+            {% endfor %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+
+</html>
+{% endblock%}

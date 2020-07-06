@@ -1,81 +1,102 @@
- 
+from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
-from .forms import  NewStatusForm, NewCommentForm
-from django.shortcuts import render,redirect
-from .models import Image, Profile, Comment
+from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
+from django.http import HttpResponse,HttpResponseRedirect
+from .models import Post
+from .forms import CommentForm
+
 
 # Create your views here.
-@login_required(login_url='/accounts/login/')
-def timeline(request):
-    current_user = request.user
-    images = Image.objects.order_by('-pub_date')
-    profiles = Profile.objects.order_by('-last_update')
-    comment = Comment.objects.order_by('-date')
-    return render(request, 'timeline.html', {"images":images, "profiles":profiles, "user_profile":user_profile, "comment":comment})
+# def home(request):
+#     posts = Post.objects.all()
+#     context ={
+#         'posts': posts
+#     }
+#     return render(request, 'index.html',context)  
 
-@login_required(login_url='/accounts/login/')
-def profile(request):
-    current_user = request.user
-    # profile = Profile.objects.get(user_id=current_user.id)
-    images = Image.objects.all().filter(profile_id=current_user.id)
-    return render(request, 'profile.html', {"images":images, "profile":profile})
 
-@login_required(login_url='/accounts/login/')
-def new_status(request, username):
-    current_user = request.user
-    username = current_user.username
-    if request.method =='POST':
-        form = NewStatusForm(request.POST, request.FILES)
-        if form.is_valid():
-            image = form.save()
-            image.user = request.user
-            image.save()
-        return redirect('allTimelines')
-    else:
-        form = NewStatusForm()
-    return render(request, 'new_status.html', {"form":form}) 
+class PostListView(ListView):
+    model = Post
+    template_name = 'index.html'
+    context_object_name = 'posts'
+    ordering = ['-date_posted']
 
-#User Profile           
-@login_required(login_url='/accounts/login/')
-def user_profile(request, user_id):
-    profile = Profile.objects.get(id=user_id)
-    images = Image.objects.all().filter(user_id=user_id)
-    return render(request, "profile.html", {"[profile":profile, "images":images})
+class PostDetailView(DetailView):
+    model = Post
+   
 
-@login_required(login_url='/accounts/login/')
-def single_image(request, image_id):
-    image = Image.objects.get(id = image_id)
-    return render(request, "single_image.html",{"image":image})
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    fields =['caption', 'image_name' ,'image']
 
-def find_profile(request):
-    if 'image' in request.GET and request.GET["image"]:
-        search_term = request.GET.get("image")
-        searched_images = Image.search_by_user(search_term)
-        message = f"{search_term}"
-        return render(request, 'user_profile.html',{"message":message,"image": searched_images})
+    def form_valid(self, form):
+        form.instance.profile = self.request.user.profile
+        return super ().form_valid(form)
 
-    else:
-        message = "You haven't searched for any term yet"
-        return render(request, 'single_image.html',{"message":message}) 
+class PostUpdateView(LoginRequiredMixin,UserPassesTestMixin,  UpdateView):
+    model = Post
+    fields =['caption', 'image_name' ,'image']
 
-@login_required(login_url='/accounts/login/')
-def single_image_like(request, image_id):
-    image = Image.objects.get(id=image_id)
-    image.likes = image.likes + 1
-    image.save()
-    return redirect('allTimelines')
+    def form_valid(self, form):
+        form.instance.profile = self.request.user.profile
+        return super ().form_valid(form)
 
-@login_required(login_url='/accounts/login/')
-def new_comment(request, username):
-    current_user =request.user
-    username = current_user.username
-    if request.method =='POST':
-        form = NewCommentForm(request.POST, request.FILES)
-        if form.is_valid():
-            comment = form.save()
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user.profile == post.profile:
+            return True
+        return False
+
+class PostDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
+    model = Post
+    success_url ='/'
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user.profile == post.profile:
+            return True
+        return False
+
+
+
+
+@login_required(login_url='/login/')
+def likePost(request,image_id):
+  image = Post.objects.get(pk = image_id)
+  is_liked = False
+  if image.likes.filter(id = request.user.id).exists():
+      image.likes.remove(request.user)
+      is_liked = False
+  else:
+      image.likes.add(request.user)
+      is_liked = True
+  return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def comment(request,redirect, post_id):
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
             comment.user = request.user
+            post = Post.get_post(post_id)
+            comment.post = post
             comment.save()
-        return redirect('allTimelines')
+            return redirect('posts')
     else:
-        form = NewCommentForm()
-    return render(request, 'new_comment.html', {"form":form})
+        comment_form = CommentForm()
+    context = {
+        "comment_form":comment_form,
+    }
+    return render(request, 'index.html', context)
+
+
+@login_required
+def commenting(request, post_id):
+    posts = Post.objects.get(pk=post_id)
+    context ={
+        "posts":posts,
+    }
+    return render(request, 'comments.html', context)

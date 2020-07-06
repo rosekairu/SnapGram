@@ -1,70 +1,56 @@
-{% load bootstrap3 %}{% load static %} {% load cloudinary %}
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">{% if title %}
-    <title>SnapGram - {{title}}</title>
+        <link href="https://fonts.googleapis.com/css?family=Lobster+Two&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.10/css/mdb.min.css" rel="stylesheet">
+
+
+    {% if title%}
+    <title> Insta{{ title }}</title>
     {% else %}
-    <title>SnapGram</title>
-    {% endif %} {% block styles %} {% bootstrap_css %}
-    <link href="https://fonts.googleapis.com/css?family=Chewy|Monoton|Cabin+Sketch|Concert+One|Arima+Madurai" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,300,700&subset=latin,latin-ext">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/gram.css'%}"> {% endblock %}
-
-
+    <title>Insta</title>
+    {% endif %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
 </head>
 
-
 <body>
-    <!--Navbar-->
-    <nav class="navbar navbar-default navbar-fixed-top" style="padding:5px">
+    {% include "navbar.html" %}
+    <div class="container">
+        {% if messages %}
+        {%  for message in messages %}
 
-        <div class="container">
-
-            <h1 class="logo">
-                <a href="/"><img src="https://seeklogo.com/images/I/instagram-new-2016-glyph-logo-84CB825424-seeklogo.com.png" alt="" style="width:35px">
-                </a>
-            </h1>
-            <div class="logoname" style="display:inline">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/2000px-Instagram_logo.svg.png" alt="" style="width:135px">
-            </div>
-            <ul class="nav nav-right">
-                <form class="form-group" action="{% url 'findProfile' %}" method="post" style="padding: 8px; text-align: center;border-radius: 8px;border: 2px solid #ddd;outline: 0;margin-right:400px; display:inline" role="search">
-                    {% csrf_token %}
-                    <input type="text" name="images" placeholder="Search" style="border:none; padding:10px; background-color:inherit">
-                </form>
-                {% if user.is_authenticated %}
-                <div class="iconns" style="font-size:40px; display:inline">
-                    <a href="{% url 'new_status' user.username %}">
-                        <i class="material-icons" style="font-size:40px">add</i>
-                    </a>
-                    <a href="{% url 'myProfile' %}">
-                        <i class="material-icons" style="font-size:40px">perm_identity</i>
-                    </a>
-                    <a href="/logout">
-                        <i class="material-icons" style="font-size:40px">lock_open</i>
-                    </a>
-            </ul>
-            {% else %}
-            <li>
-                <a href="/accounts/login"><i class="material-icons" style="font-size:40px">lock_outline</i></a>
-            </li>
-
-            {% endif %}
-
-            </div>
-            </ul>
+        <div class="alert alert-{{ message.tags }}">
+            {{message}}
         </div>
-        <!--/.container-->
 
-    </nav>
-    <!--End Navbar-->
+        {% endfor %}
+        {% endif %}
+        {% block content %} {% endblock %}
+    </div>
 
-    {% block scripts %} {%block content %}{% endblock%}
-    <script src="https://use.fontawesome.com/6198bcf0a2.js"></script>
-    {% bootstrap_javascript %}{% endblock %}
+
+    <!-- JQuery -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js">
+    </script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.8.10/js/mdb.min.js">
+    </script>
 </body>
 
 </html>
