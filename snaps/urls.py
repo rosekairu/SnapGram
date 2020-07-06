@@ -1,18 +1,21 @@
-from django.conf.urls import url
-from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.conf.urls import url
+from .import views
+# from django.urls import path, re_path
+
 
 urlpatterns=[
-    url('^$', views.home_images, name='home'),
-    url(r'^search/', views.search_users, name='search_users'),
-    url(r'^image/(\d+)',views.image,name ='image'),
-    url(r'^users/', views.user_list, name = 'user_list'),
-    url(r'^new/image$', views.new_image, name='new_image'),
-    url(r'^edit/profile$', views.edit_profile, name='edit_profile'),
-    url(r'^profile/(?P<username>[0-9]+)$', views.individual_profile_page, name='individual_profile_page'),
-    # url(r'^comment/(?P<image_id>\d+)', views.add_review, name='add_review'),
-    url(r'^myprofile/$', views.myprofile, name='myprofile'),
+    url(r'^$', views.timeline, name='allTimelines'),
+    url(r'^profile/', views.find_profile, name='find_profile'),
+    url(r'^image/(\d+)', views.single_image, name='singleImage'),
+    url(r'^user/(\d+)', views.user_profile, name='userProfile'),
+    url(r'^single_image/likes/(\d+)', views.single_image_like, name="singleImageLike"),
+    url(r'^profile/', views.find_profile, name="findProfile"),
+    url(r'^new/comment/(?P<username>[-_\w.]+)/$', views.new_comment, name="newComment"),
+    url(r'^new/status/(?P<username>[-_\w.]+)/$', views.new_status, name="new_status"),
+    url(r'^accounts/profile/', views.profile, name="myProfile"),        
+
 ]
 if settings.DEBUG:
     urlpatterns+= static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

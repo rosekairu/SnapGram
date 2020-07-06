@@ -8,7 +8,10 @@
             {% csrf_token%}
 
             <div class="form-group">
-                {{form.comment.label}} {{form.comment}} {{form.comment.errors}}
+                {{form.image.label}} {{form.image}} {{form.image.errors}}
+            </div>
+            <div class="form-group">
+                {{form.image_caption.label}} {{form.image_caption}} {{form.image_caption.errors}}
             </div>
             <button type="submit" class="btn btn-default btn-block btn-primary">POST</button>
         </form>

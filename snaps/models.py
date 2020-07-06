@@ -1,174 +1,75 @@
-from django.db import models
 from django.contrib.auth.models import User
-import datetime as dt
-
-
+from django.db import models
+from tinymce.models import HTMLField
 
 # Create your models here.
+    
 class Profile(models.Model):
+    profile_photo = models.ImageField('profile/', null = True)
+    bio = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    last_update = models.DateTimeField(auto_now_add=True, null=True)
+
     class Meta:
-        db_table = 'profile'
+        ordering = ['-last_update']
 
-    bio = models.TextField(max_length=200, null=True, blank=True, default="bio")
-    profilepic = models.ImageField(upload_to='picture/', null=True, blank=True)
-    user=models.OneToOneField(User, on_delete=models.CASCADE, blank=True, related_name="profile")
-    followers = models.ManyToManyField(User, related_name="followers", blank=True)
-    following = models.ManyToManyField(User, related_name="following", blank=True)
-
-    def __unicode__(self):
-        return u'Profile of user: %s' % self.user.username
+    def __str__(self):
+        return self.user.username
 
     def save_profile(self):
         self.save()
 
     def delete_profile(self):
-        self.delete()
-
-    def follow_user(self, follower):
-        return self.following.add(follower)
-
-    def unfollow_user(self, to_unfollow):
-        return self.following.remove(to_unfollow)
-
-    def is_following(self, checkuser):
-        return checkuser in self.following.all()
-
-    def get_number_of_followers(self):
-        if self.followers.count():
-            return self.followers.count()
-        else:
-            return 0
-
-    def get_number_of_following(self):
-        if self.following.count():
-            return self.following.count()
-        else:
-            return 0
-
-    @classmethod
-    def search_users(cls, search_term):
-        profiles = cls.objects.filter(user__username__icontains=search_term)
-        return profiles
-
-    def __str__(self):
-        return self.user.username
-
-
-class Location(models.Model):
-    name = models.CharField(max_length=30)
-
-
-    def save_location(self):
-        self.save()
-
-    def delete_location(self):
-        self.delete()
-
-    def __str__(self):
-        return self.name
-
-
-class tags(models.Model):
-    name = models.CharField(max_length=30)
-
-    def __str__(self):
-        return self.name
-
-    def save_tags(self):
-        self.save()
-
-    def delete_tags(self):
-        self.delete()
-
+        Profile.objects.all().delete()        
+  
 
 class Image(models.Model):
-    image=models.ImageField(upload_to='picture/', )
-    name = models.CharField(max_length=40, null=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, related_name="images")
-    description=models.TextField()
-    location=models.ForeignKey(Location,on_delete = models.DO_NOTHING, null=True)
-    tags=models.ManyToManyField(tags, blank=True)
+    image = models.ImageField(upload_to ='pictures/', null=True)
+    image_name = models.CharField(max_length =30, null=True)
+    image_caption = models.TextField(null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null = False)
     likes = models.IntegerField(default=0)
-    comments= models.TextField(blank=True)
+    pub_date = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.name
+
+
+    class Meta:
+        ordering = ['-pub_date']
 
     def save_image(self):
         self.save()
 
-    @classmethod
-    def delete_image_by_id(cls, id):
-        pictures = cls.objects.filter(pk=id)
-        pictures.delete()
+    def delete_image(self):
+        self.delete()    
 
     @classmethod
-    def get_image_by_id(cls, id):
-        pictures = cls.objects.get(pk=id)
-        return pictures
+    def search_by_user(cls,search_term):
+        images = cls.objects.filter(image_caption__icontains=search_term)
+        return images
 
     @classmethod
-    def filter_by_tag(cls, tags):
-        pictures = cls.objects.filter(tags=tags)
-        return pictures
-
-    @classmethod
-    def filter_by_location(cls, location):
-        pictures = cls.objects.filter(location=location)
-        return pictures
-
-    @classmethod
-    def search_image(cls, search_term):
-        pictures = cls.objects.filter(name__icontains=search_term)
-        return pictures
-
-    @classmethod
-    def update_image(cls, id):
-        pictures=cls.objects.filter(id=id).update(id=id)
-        return pictures
-
-    @classmethod
-    def update_description(cls, id):
-        pictures = cls.objects.filter(id=id).update(id=id)
-        return pictures
-
-class Followers(models.Model):
-    '''
-    followers
-    '''
-    user = models.CharField(max_length=20, default="")
-    follower = models.CharField(max_length=20, default="")
+    def get_image_by_id(cls, image_id):
+        images = cls.objects.get(id=image_id)
+        return images   
 
 
-class Review(models.Model):
-    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, related_name='user')
-    image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name="review")
-    comment = models.TextField()
+
+class Comment(models.Model):
+    comment = models.CharField(null = True, max_length= 5000, verbose_name = 'name')
+    date = models.DateTimeField(auto_now_add=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+    image = models.ForeignKey(Image, on_delete=models.CASCADE, null= True)
+
+    class Meta:
+        verbose_name = "comments"
+        verbose_name_plural = "comments"
+
+    class Meta:
+        ordering = ['-date']        
 
     def save_comment(self):
         self.save()
 
-    def get_comment(self, id):
-        comments = Review.objects.filter(image_id =id)
-        return comments
-
-    def __str__(self):
-        return self.comment
-
-class NewsLetterRecipients(models.Model):
-    name = models.CharField(max_length = 30)
-    email = models.EmailField()
-
-class Like(models.Model):
-    user = models.ForeignKey(User,on_delete = models.DO_NOTHING,)
-    image = models.ForeignKey(Image, on_delete = models.DO_NOTHING,)
-    value = models.IntegerField(default=True, null=True, blank=True)
-
-    def save_like(self):
-        self.save()
-
-    def __str__(self):
-        return str(self.user) + ':' + str(self.image) + ':' + str(self.value)
-
-    class Meta:
-        unique_together = ("user", "image", "value")
+    def delete_comment(self):
+        self.delete()
