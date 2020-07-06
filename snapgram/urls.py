@@ -29,4 +29,5 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path("logout/", auth_views.LogoutView.as_view()),  
     url(r'', include('snaps.urls')),
+    url(r'^tinymce/', include('tinymce.urls')),
 ]
