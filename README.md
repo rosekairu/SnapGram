@@ -1,6 +1,6 @@
 # SnapGram
 
-[![codebeat badge](https://codebeat.co/badges/ad041547-9b52-4318-8af2-57cb39ae56ee)](https://codebeat.co/projects/github-com-rosekairu-e-album-master)
+[![codebeat badge](https://codebeat.co/badges/76361637-7ec2-470f-abff-a743b56c7b54)](https://codebeat.co/projects/github-com-rosekairu-snapgram-master)
 
 ### Author: [rosekairu](https://github.com/rosekairu)
 
