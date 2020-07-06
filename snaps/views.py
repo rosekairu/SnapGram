@@ -1,37 +1,76 @@
-from django.shortcuts import render,redirect
-from django.http import HttpResponse, Http404,HttpResponseRedirect
-from django.contrib.auth.models import User
-from .models import Image,Profile,Follow,Comments
-from .forms import NewImageForm, UpdatebioForm,CommentForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
+from .models import Image,Location,tags, Profile, Review, NewsLetterRecipients, Like
+from django.http  import HttpResponse, Http404, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+from django.contrib.auth.models import User
+from .forms import NewImageForm, UpdatebioForm, ReviewForm
+from .email import send_welcome_email
+from .forms import NewsLetterForm
+# Views
 
-# Create your views here.
+
 @login_required(login_url='/accounts/login/')
-def home(request):
-    images = Image.objects.order_by('pub_date').reverse().all()
-    image_comments = Image.get_images()
-    return render(request, 'profile/home.html', {"images":images,"image_comments":image_comments})
+def home_images(request):
+    
+    locations = Location.objects.all()
 
-def search_results(request):
-    if 'user' in request.GET and request.GET['user']:
-        search_term = request.GET.get('user')
-        searched_user = Profile.search_by_user(search_term)
-        message = f"{search_term}"
+    if request.GET.get('location'):
+        pictures = Image.filter_by_location(request.GET.get('location'))
 
-        return render(request, 'profile/search.html', {"message":message,"users":searched_user})
+    elif request.GET.get('tags'):
+        pictures = Image.filter_by_tag(request.GET.get('tags'))
+
+    elif request.GET.get('search_term'):
+        pictures = Image.search_image(request.GET.get('search_term'))
+
     else:
-        message = "You haven't searched for any term"
-        return render(request, 'profile/search.html', {"message":message})
+        pictures = Image.objects.all()
 
-def image(request,image_id):
+    form = NewsLetterForm
+
+
+    if request.method == 'POST':
+        form = NewsLetterForm(request.POST or None)
+        if form.is_valid():
+            name = form.cleaned_data['your_name']
+            email = form.cleaned_data['email']
+
+            recipient = NewsLetterRecipients(name=name, email=email)
+            recipient.save()
+            send_welcome_email(name, email)
+
+            HttpResponseRedirect('home_images')
+
+    return render(request, 'index.html', {'locations':locations,'tags': tags,'pictures':pictures, 'letterForm':form})
+
+def image(request, id):
+
     try:
-        image = Image.objects.get(id = image_id)
-    except DoesNotExist:
+        image = get_object_or_404(Image, pk = id)
+
+    except Object.DoesNotExist:
         raise Http404()
+
     current_user = request.user
-    comments = Comments.objects.filter(comment_image = image)
-    print(comments)
-    return render(request,"profile/image.html", {"image":image,'comments':comments})
+    comments = Review.get_comment(Review, id)
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            comment = form.cleaned_data['comment']
+
+            review = Review()
+            review.image = image
+            review.user = current_user
+            review.comment = comment
+            review.save()
+
+    else:
+        form = ReviewForm()
+
+    return render(request, 'profile/image.html', {"image": image,'form':form,'comment':comment})
 
 @login_required(login_url='/accounts/login/')
 def new_image(request):
@@ -41,7 +80,6 @@ def new_image(request):
         if form.is_valid():
             image = form.save(commit=False)
             image.user = current_user
-            image.profile = current_user.profile
             image.save()
         return redirect('home')
 
@@ -49,14 +87,19 @@ def new_image(request):
         form = NewImageForm()
     return render(request, 'registration/new_image.html', {"form": form})
 
+# Viewing a single picture
+
+def user_list(request):
+    user_list = User.objects.all()
+    context = {'user_list': user_list}
+    return render(request, 'users.html', context)
+
+
 @login_required(login_url='/accounts/login/')
-def update_profile(request):
+def edit_profile(request):
     current_user = request.user
     if request.method == 'POST':
-        if Profile.objects.filter(user_id=current_user).exists():
-            form = UpdatebioForm(request.POST, request.FILES,instance=Profile.objects.get(user_id=current_user))
-        else:
-            form = UpdatebioForm(request.POST, request.FILES)
+        form = UpdatebioForm(request.POST, request.FILES)
         if form.is_valid():
             image = form.save(commit=False)
             image.user = current_user
@@ -64,68 +107,65 @@ def update_profile(request):
         return redirect('home')
 
     else:
-        if Profile.objects.filter(user_id=current_user).exists():
-            form = UpdatebioForm(instance = Profile.objects.get(user_id=current_user))
-        else:
-            form = UpdatebioForm()
+        form = UpdatebioForm()
     return render(request, 'registration/update_profile.html', {"form": form})
 
-@login_required(login_url='/accounts/login/')
-def profile(request,profile_id):
-    current_user = request.user
-    user = User.objects.get(pk=profile_id)
-    images = Image.objects.filter(profile=profile_id)
-    credentials = Profile.objects.filter(user = profile_id)
 
-    if Follow.objects.filter(following=request.user,follower=user).exists():
-        follows_me =True
+def search_users(request):
+
+    # search for a user by their username
+    if 'user' in request.GET and request.GET["user"]:
+        search_term = request.GET.get("user")
+        searched_users = Profile.search_users(search_term)
+        message = f"{search_term}"
+
+        return render(request, 'search.html', {"message": message, "profiles": searched_users})
 
     else:
-        follows_me=False
-    followers=Follow.objects.filter(follower = user).count()
-    following=Follow.objects.filter(following = user).count()
+        message = "You haven't searched for any person"
+        return render(request, 'search.html', {"message": message})
 
-    return render (request, 'registration/profile.html', {'images':images,'follows_me':follows_me,'following':following,'followers':followers, 'current_user': current_user,'credentials':credentials})
-
-def follow(request,user_id):
-    user = User.objects.get(id=user_id)
-    follows_me=False
-    if Follow.objects.filter(following=request.user,follower=user).exists():
-        Follow.objects.filter(following=request.user,follower=user).delete()
-        follows_me=False
-    else:
-        Follow(following=request.user,follower=user).save()
-        follows_me=True
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required(login_url='/accounts/login/')
-def comment(request,image_id):
-    current_user = request.user
-    images = Image.objects.filter(id=image_id).first()
-    prof = Profile.objects.filter(user=current_user).first()
-    if request.method=='POST':
-        form=CommentForm(request.POST,request.FILES)
-        if form.is_valid():
-            comment=form.save(commit=False)
-            comment.user= current_user
-            comment.comment_image=images
-            comment.save()
-            return redirect('home')
+def myprofile(request, username = None):
 
+    if not username:
+        username = request.user.username
+    # images by user id
+    images = Image.objects.filter(user_id=username)
+
+    return render(request, 'profile/userprofile.html', locals())
+
+# Search for an image
+def search_image(request):
+
+        # search for an image by the description of the image
+        if 'image' in request.GET and request.GET["image"]:
+            search_term = request.GET.get("image")
+            searched_images = Image.search_image(search_term)
+            message = f"{search_term}"
+
+            return render(request, 'search.html', {"message": message, "pictures": searched_images})
+
+        else:
+            message = "You haven't searched for any image"
+            return render(request, 'search.html', {"message": message})
+
+
+@login_required(login_url='/accounts/login/')
+def individual_profile_page(request, username):
+    print(username)
+    if not username:
+        username = request.user.username
+    # images by user id
+    images = Image.objects.filter(user_id=username)
+    user = request.user
+    profile = Profile.objects.get(user=user)
+    user = get_object_or_404(User, pk=username)
+    if user:
+        print('user found')
+        profile = Profile.objects.get(user=user)
     else:
-        form=CommentForm()
-    return render(request,'profile/comment.html',{'form':form,'image_id':image_id})
-    
-def comment_show(request,image_id):
-    try:
-        comment =Comment.objects.get(id =image.id)
-    except:
-        raise Http404()
-        returnrender(request,'home.html',{"comment":comment})
+        print('No such-user')
 
-def likes(request,id):
-    likes=1
-    image = Image.objects.get(id=id)
-    image.like = image.like+1
-    image.save()    
-    return redirect("home")
+    return render (request, 'registration/user_images.html', {'images':images,'profile':profile,'user':user,'username': username})

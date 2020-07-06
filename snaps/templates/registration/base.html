@@ -1,4 +1,4 @@
-{% load bootstrap4 %} {% load static%}
+{% load bootstrap4 %} {% load static%} {% load cloudinary %}
 <!DOCTYPE html>
 <html>
 
@@ -7,12 +7,10 @@
     <title> Image Gallery - {{title}}</title>
     {% else %}
     <title> Image Gallery </title>
-    {% endif %} {% block styles %}
+    {% endif %} {% block styles %} {% bootstrap_css %}
+    <link rel="stylesheet" href="{%static 'css/index.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Grand+Hotel" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">
-    <link rel="shortcut icon" href="../../../static/imgs/logo.png" />
-    <link rel="stylesheet" href="{%static 'css/index.css' %}"> {% bootstrap_css %} {% endblock %}
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> {% endblock %}
 </head>
 
 <body>

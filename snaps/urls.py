@@ -4,15 +4,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns=[
-    url('^$', views.home, name='home'),
-    url(r'^search', views.search_results, name='search_results'),
+    url('^$', views.home_images, name='home'),
+    url(r'^search/', views.search_users, name='search_users'),
     url(r'^image/(\d+)',views.image,name ='image'),
-    url(r'^new/image$', views.new_image, name='new-image'),
-    url(r'^follow/(\d+)',views.follow,name="follow"),
-    url(r'^edit/profile$', views.update_profile, name='update_profile'),
-    url(r'^comment/(\d+)/$', views.comment, name='comment'),
-    url(r'^profile/(\d+)', views.profile, name='profile'),
-    url(r'^likes/(?P<id>\d+)',views.likes,name ='like')
+    url(r'^users/', views.user_list, name = 'user_list'),
+    url(r'^new/image$', views.new_image, name='new_image'),
+    url(r'^edit/profile$', views.edit_profile, name='edit_profile'),
+    url(r'^profile/(?P<username>[0-9]+)$', views.individual_profile_page, name='individual_profile_page'),
+    # url(r'^comment/(?P<image_id>\d+)', views.add_review, name='add_review'),
+    url(r'^myprofile/$', views.myprofile, name='myprofile'),
 ]
 if settings.DEBUG:
     urlpatterns+= static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

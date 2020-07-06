@@ -6,7 +6,7 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'imgs/logo2.gif' %}" style="height:30px;width:36px;">
             </a>
-            <a class="navbar-brand" id="victor" href="{% url 'home' %}">Instagram
+            <a class="navbar-brand" id="snap" href="{% url 'home' %}">SnapGram
       </a>
         </div>
         <div class="col-sm-6 col-md-6">
@@ -45,7 +45,7 @@
         <!-- Adding a search form  -->
         <div class="col-sm-4 col-md-4 navbar-right">
 
-            <form class="navbar-form" role="search" action="{% url 'search_results' %}">
+            <form class="navbar-form" role="search" action="{% url 'search_users' %}">
 
                 <div class="input-group">
                     <input type="text" class="form-control mr-sm-4" placeholder="Search User" name="user">
