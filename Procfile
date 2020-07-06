@@ -1,0 +1,1 @@
+web: gunicorn snapgram.wsgi --log-file -
