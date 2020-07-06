@@ -1,0 +1,81 @@
+{%extends "registration/base.html"%} {% load bootstrap4 %} {% load static %} {% block content %} {% load cloudinary %}
+<div class="container" style="background-color:#fff;">
+    <div class="row p-0 m-0">
+        <div class="col-md-6  mt-5">
+            {% if form.errors %}
+            <p> Some Information Might be Incorrect </p>
+            {% endif %}
+
+            <div class="card border-primary mb-4" style="max-width:25rem;">
+
+                <div class="card-header text-center">
+                    <h1 class="h1" style="font-family: 'Grand Hotel', cursive; color:blue;font-size:65px;">SnapGram</h1>
+                    <h3 class="text-center" style="color:grey;font-size:15px;">Login to see photos and videos from your friends.</h3>
+                </div>
+                <div class="card-body text-primary">
+                    <form action="/accounts/login/" method="post">
+                        {% csrf_token %} {% bootstrap_form form%}
+
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-primary btn-sm" value="Login">
+                        </div>
+
+                        <input type="hidden" name="next" value="{{next}}">
+
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6  mt-5">
+            <img class="thumbnail" src="../../../static/imgs/bg3.gif" style="height:400px;width:590px;">
+        </div>
+    </div>
+
+    <!-- ********************* -->
+
+    <div class="row p-0 m-0">
+        <div class="col-md-6">
+
+            <div class="card mt-5" style="width: 28rem;">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Don't have an account?</h5>
+                    <h2 style="color:grey;font-size:10px;">By signing up, you agree to our Terms, Data Policy and Cookies Policy.</h2>
+                    <a href="/accounts/register" class="btn btn-primary">Sign Up</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mt-5" style="width: 28rem;">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Get the app.</h5>
+                    <a href="https://itunes.apple.com/ke/app/instagram/id389801252?mt=8">
+                        <img src="{% static 'imgs/ios.png' %}" style="height:70px;width:200px;">
+                    </a>
+                    <a href="https://play.google.com/store?hl=en">
+                        <img src="{% static 'imgs/android.png' %}" style="height:70px;width:200px;">
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ********************* -->
+</div>
+
+<br>
+<br>
+
+
+<div class="container">
+    <div class="col-md-12">
+        <div class="footer text-center">
+            <ul id="footer1">
+                <li>ABOUT US</li>
+                <li style="font-size:10px;"> <strong>© 2020 Rose Kairu</strong></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

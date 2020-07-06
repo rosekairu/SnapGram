@@ -1,6 +1,3 @@
-from django.db import models
-
-# Create your models here.
 from django.contrib.auth.models import User
 from django.db import models
 from tinymce.models import HTMLField
@@ -8,9 +5,9 @@ from tinymce.models import HTMLField
 # Create your models here.
     
 class Profile(models.Model):
-    profile_photo = models.ImageField('profile/', null = True)
-    bio = models.TextField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    bio = models.TextField(max_length=200, null=True, blank=True, default='bio')
+    profile_photo = models.ImageField(upload_to='pictures/', null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,default = "DEFAULT VALUE")
     last_update = models.DateTimeField(auto_now_add=True, null=True)
 
     class Meta:
@@ -31,11 +28,10 @@ class Image(models.Model):
     image = models.ImageField(upload_to ='image/', null=True)
     image_name = models.CharField(max_length =30, null=True)
     image_caption = models.TextField(null=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     likes = models.IntegerField(default=0)
     pub_date = models.DateTimeField(auto_now_add=True)
-
 
 
     class Meta:
@@ -62,8 +58,8 @@ class Image(models.Model):
 class Comment(models.Model):
     comment = models.CharField(null = True, max_length= 5000, verbose_name = 'name')
     date = models.DateTimeField(auto_now_add=True, null=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
-    image = models.ForeignKey(Image, on_delete=models.CASCADE, null= True)
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    image = models.ForeignKey(Image, null= True, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "comments"

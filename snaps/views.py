@@ -1,3 +1,4 @@
+ 
 from django.contrib.auth.decorators import login_required
 from .forms import  NewStatusForm, NewCommentForm
 from django.shortcuts import render,redirect
@@ -32,7 +33,7 @@ def new_status(request, username):
         return redirect('allTimelines')
     else:
         form = NewStatusForm()
-    return render(request, 'newstatus.html', {"form":form}) 
+    return render(request, 'new_status.html', {"form":form}) 
 
 #User Profile           
 @login_required(login_url='/accounts/login/')
@@ -44,18 +45,18 @@ def user_profile(request, user_id):
 @login_required(login_url='/accounts/login/')
 def single_image(request, image_id):
     image = Image.objects.get(id = image_id)
-    return render(request, "image.html",{"image":image})
+    return render(request, "single_image.html",{"image":image})
 
 def find_profile(request):
     if 'image' in request.GET and request.GET["image"]:
         search_term = request.GET.get("image")
         searched_images = Image.search_by_user(search_term)
         message = f"{search_term}"
-        return render(request, 'registration/profile.html',{"message":message,"image": searched_images})
+        return render(request, 'user_profile.html',{"message":message,"image": searched_images})
 
     else:
         message = "You haven't searched for any term yet"
-        return render(request, 'image.html',{"message":message}) 
+        return render(request, 'single_image.html',{"message":message}) 
 
 @login_required(login_url='/accounts/login/')
 def single_image_like(request, image_id):
