@@ -1,21 +1,23 @@
-{% load static%}
+{% load bootstrap4 %} {% load static%}
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SnapGram</title>
+    {% block styles %} {% bootstrap_css %}
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="{% static 'images/favicon.ico'%}" rel="icon" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" href="{% static 'css/index1.css' %}"> {% endblock %}
+
 </head>
 
 <body>
-    {% block navbar%} {% include 'navbar.html' %} {% endblock navbar%} {% block content%} {% endblock content%} {% block scripts%}
+    {% block navbar%} {% include 'navbar.html' %} {% endblock navbar%}&nbsp; &nbsp; {% block content%} {% endblock content%} {% block scripts%}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="{% static 'js/main.js' %}"></script>
-    {% endblock scripts%}
+    {% bootstrap_javascript %} {% endblock scripts%}
 </body>
 
 </html>
