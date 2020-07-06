@@ -1,3 +1,6 @@
+from django.db import models
+
+# Create your models here.
 from django.contrib.auth.models import User
 from django.db import models
 from tinymce.models import HTMLField
@@ -23,12 +26,13 @@ class Profile(models.Model):
         Profile.objects.all().delete()        
   
 
+
 class Image(models.Model):
-    image = models.ImageField(upload_to ='pictures/', null=True)
+    image = models.ImageField(upload_to ='image/', null=True)
     image_name = models.CharField(max_length =30, null=True)
     image_caption = models.TextField(null=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null = False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     likes = models.IntegerField(default=0)
     pub_date = models.DateTimeField(auto_now_add=True)
 

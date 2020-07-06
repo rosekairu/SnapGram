@@ -1,4 +1,0 @@
-Dear {{name}}
-
-Welcome to the SnapGram newsletter
-You will find the most exciting news about SnapGram.
