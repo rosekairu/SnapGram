@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col m4"></div>
+    <div class="col m4">
+      <div class="card">
+        <div class="card-content">
+          <h3 class="center">Sign Up</h3>
+        </div>
+        <div class="card-content">
+            {% if form.errors %}
+                <div class = "card-panel red white-text"> Some Information Might be Incorrect </div>
+            {% endif %}
+          <form  action="/accounts/register/" method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <br>
+            <input type="submit" class="btn blue" value="Sign Up" style="width:100%">
+            
+
+            <input type="hidden" name="next" value="{{next}}">
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+    <!-- empty div -->
+    <div class="col-md-4"></div>
+  </div>
+</div>
+
+{% endblock %}

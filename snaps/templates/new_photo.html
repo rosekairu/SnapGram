@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class = "container">
+    <div class = "row">
+        <br>
+        <br>
+        <div class = "col l4 m4 s12"></div>
+        <div class = "col l4 m4 s12">
+            {{form.errors}}
+            <form action = "/create/post" method="POST" enctype='multipart/form-data'>
+                {% csrf_token %}
+                {{form.image.label}}<br>
+                {{form.image}}<br><br>
+                {{form.image_name.label}}<br>
+                {{form.image_name}}<br><br>
+                {{form.caption.label}}<br>
+                {{form.caption}}<br>
+                <br>
+                <input type = "submit" class = "btn right" value="POST">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

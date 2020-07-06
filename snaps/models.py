@@ -1,43 +1,90 @@
 from django.db import models
-from django.utils import timezone
 from django.contrib.auth.models import User
-from django.urls import reverse
+from cloudinary.models import CloudinaryField
+
+class ModelMethods:
+    """
+    Define CRUD operation methods for db models
+    """
+    def save_model(self):
+        """
+        Save relational model data to database
+
+        Args:
+            self:self
+        Returns:
+            None (NoneType)
+        """
+        self.save()
+
+    def delete_model(self):
+        """
+        Delete relational model data from database
+
+        Args:
+            self:self
+        Returns:
+            None (NoneType)
+        """
+        self.delete()
+
+    def update_model(self, **kwargs):
+        """
+        Update relational model data in database
+
+        Args:
+            kwargs: model attributes to be updated
+        Returns:
+            None (NoneType)
+        """
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+        self.save()
 
 
-#   your models here.
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profile_picture = models.ImageField(upload_to='users/', default='user.png')
-    bio = models.TextField(default="Welcome!")
+class Profile(models.Model, ModelMethods):
+    profile_photo = CloudinaryField('profile_photo', default = "image/upload/v1583754861/person_placeholder_l8auvx.jpg")
+    bio = models.TextField(default = '')
+    user = models.OneToOneField(User, on_delete = models.CASCADE, default=None)
 
-    def __str__(self):
-        return f'{self.user.username} Profile' 
-    def save(self,*args, **kwargs):
-        super().save(*args, **kwargs)
-
-
-class Post(models.Model):
-    image_name = models.CharField(max_length = 30)
-    caption = models.TextField(default="Welcome Me!")
-    image = models.ImageField(upload_to='posts/')
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    date_posted = models.DateTimeField(default=timezone.now)
-    likes = models.ManyToManyField(User, related_name= 'likes', blank = True)
+    @staticmethod
+    def search_by_username(search_username):
+        searched_users = User.objects.filter(username__icontains = search_username).all()
+        return searched_users
     
-    def total_likes(self):
-        self.likes.count()
+class Image(models.Model):
+    image = CloudinaryField('image')
+    image_name = models.CharField(max_length=32)
+    caption = models.TextField()
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    
+    likes = models.IntegerField(default=0)
 
-    def __str__(self):
-        return self.image_name
+    def save_image(self):
+        self.save()
 
-    def get_absolute_url(self):
-        return reverse('post-detail', kwargs={'pk': self.pk})
+    def delete_image(self):
+        self.delete()
 
-class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE,related_name='comments',default='post')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default='user')
-    comment = models.CharField(max_length=100, default='comment')
-    created_date = models.DateTimeField(default=timezone.now)
+    def update_caption(self, new_caption):
+        self.caption = new_caption
+        self.save()
 
-    def __str__(self):
-        return self.comment
+    @classmethod
+    def get_user_images(cls, search_user):
+        all_images = cls.objects.filter(user = search_user).all()
+        return all_images
+
+class Comment(models.Model, ModelMethods):
+    comment = models.TextField()
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    image = models.ForeignKey(Image, on_delete = models.CASCADE)
+
+class Followers(models.Model, ModelMethods):
+    user = models.ForeignKey(User, on_delete = models.CASCADE, related_name="users")
+    follower = models.ForeignKey(User, on_delete = models.CASCADE, related_name="followers")
+
+class ImageLike(models.Model, ModelMethods):
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    image = models.ForeignKey(Image, on_delete = models.CASCADE)

@@ -1,17 +1,18 @@
-from django.conf import settings
-from django.conf.urls.static import static
 from django.urls import path
-from django.conf.urls import url
-from .views import PostListView,PostDetailView,PostCreateView,PostUpdateView,PostDeleteView
+
 from . import views
 
+app_name = 'SnapGram'
+
 urlpatterns = [
-    path('', PostListView.as_view(), name='snaps-home'),
-    path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
-    path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post-update'),
-    path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
-    path('post/new/', PostCreateView.as_view(), name='post-create'),
-    url(r'^like/(\d+)',views.likePost, name="likePost"),
-    path('comment/<post_id>/', views.comment, name="comment"),
-    path('commenting/<post_id>', views.commenting, name="commenting"),
+    path('', views.index, name = "index"),
+    path('myprofile/', views.myprofile, name="myprofile"),
+    path('create/post', views.create_post, name="newpost"),
+    path('search', views.search, name="search"),
+    path('image/<int:image_id>', views.view_image, name="image"),
+    path('image/like/<int:image_id>', views.like_image, name="like"),
+    path('image/comment/<int:image_id>', views.comment_image, name="comment"),
+    path('profile/<str:username>', views.user_profile, name="profile"),
+    path('accounts/logout', views.logout_user, name="logout"),
+    path('profile/follow/<int:user_id>', views.follow_user, name="follow")
 ]

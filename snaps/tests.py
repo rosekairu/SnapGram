@@ -1,55 +1,127 @@
 from django.test import TestCase
-from .models import Post,Comment,Profile
+from mimesis import Generic
 
+from .models import User, Image, Profile, Comment, ImageLike, Followers
 
-# Create your tests here.
-class Post(TestCase):
-
-    #set up method
+class UserModelTest(TestCase):
     def setUp(self):
-        self.caption= Post(location='caption')
+        self.gen = Generic()
+        self.new_user = User(
+            username = self.gen.person.username(),
+            email = self.gen.person.email(),
+            password = self.gen.person.password()
+        )
 
-    def test_instance(self):
-        self.assertTrue(isinstance(self.caption,Post))
+    def test_isinstance(self):
+        self.assertTrue(isinstance(self.new_user, User))
 
     def tearDown(self):
-        Post.objects.all().delete()
+        User.objects.all().delete()
 
-    def test_save_method(self):
-        self.caption.save_location()
-        post = Post.objects.all()
-        self.assertTrue(len(post)>0)
+class ProfileModelTest(TestCase):
+    def setUp(self):
+        self.gen = Generic()
+        self.default_profile = Profile()
 
-    def test_delete_method(self):
-        self.caption.delete_location('caption')
-        post = Post.objects.all()
-        self.assertTrue(len(post)==0)
+    def test_isinstance(self):
+        self.assertTrue(isinstance(self.default_profile, Profile))
 
-class ProfileTestClass(TestCase):
-   def setUp(self):
-       self.profile=Profile()
-       self.profile.save_profile()
-   def test_instance(self):
-       self.assertTrue(isinstance(self.profile,Profile))
-   def test_save_profile(self):
-       self.profile.save_profile()
-       profiles = Profile.objects.all()
-       self.assertTrue(len(profiles) > 0)
-   def test_delete_profile(self):
-       self.profile.delete_profile()
-       profile = Profile.objects.all()
-       self.assertTrue(len(profile) == 0)
-class CommentTestClass(TestCase):
-   def setUp(self):
-       self.comment=Comment()
-       self.comment.save_comment()
-   def test_instance(self):
-       self.assertTrue(isinstance(self.comment,Comment))
-   def test_save_comment(self):
-       self.comment.save_comment()
-       comments = Comment.objects.all()
-       self.assertTrue(len(comments) > 0)
-   def test_delete_comment(self):
-       self.comment.delete_comment()
-       comment = Comment.objects.all()
-       self.assertTrue(len(comment) == 0)
+    def tearDown(self):
+        Profile.objects.all().delete()
+
+class ImageModelTest(TestCase):
+    def setUp(self):
+        self.gen = Generic()
+        self.new_user = User(
+            username = self.gen.person.username(),
+            email = self.gen.person.email(),
+            password = self.gen.person.password()
+        )
+
+        self.user_image = Image(
+            image = self.gen.person.avatar(),
+            image_name = self.gen.person.title(),
+            caption = self.gen.text.sentence(),
+            user = self.new_user
+        )
+
+    def test_isinstance(self):
+        self.assertTrue(isinstance(self.user_image, Image))
+
+    def tearDown(self):
+        Image.objects.all().delete()
+
+class CommentModelTest(TestCase):
+    def setUp(self):
+        self.gen = Generic()
+        self.new_user = User(
+            username = self.gen.person.username(),
+            email = self.gen.person.email(),
+            password = self.gen.person.password()
+        )
+
+        self.user_image = Image(
+            image = self.gen.person.avatar(),
+            image_name = self.gen.person.title(),
+            caption = self.gen.text.sentence(),
+            user = self.new_user
+        )
+
+        self.new_comment = Comment(
+            comment = self.gen.text.text(),
+            user = self.new_user,
+            image = self.user_image
+        )
+    
+    def test_isinstance(self):
+        self.assertTrue(self.new_comment, Comment)
+
+    def tearDown(self):
+        Comment.objects.all().delete()
+
+class ImageLikeModelTest(TestCase):
+    def setUp(self):
+        self.gen = Generic()
+        self.new_user = User(
+            username = self.gen.person.username(),
+            email = self.gen.person.email(),
+            password = self.gen.person.password()
+        )
+
+        self.user_image = Image(
+            image = self.gen.person.avatar(),
+            image_name = self.gen.person.title(),
+            caption = self.gen.text.sentence(),
+            user = self.new_user
+        )
+
+        self.im_like = ImageLike(user = self.new_user, image = self.user_image)
+
+    def test_isinstance(self):
+        self.assertTrue(self.im_like, ImageLike)
+
+    def tearDown(self):
+        ImageLike.objects.all().delete()
+
+class FollowersMModelTest(TestCase):
+    def setUp(self):
+        self.gen = Generic()
+        self.account_user = User(
+            username = self.gen.person.username(),
+            email = self.gen.person.email(),
+            password = self.gen.person.password()
+        )
+
+        self.follower_user = User(
+            username = self.gen.person.username(),
+            email = self.gen.person.email(),
+            password = self.gen.person.password()
+        )
+
+        self.follower = Followers(user = self.account_user, follower = self.follower_user)
+
+    def test_isinstance(self):
+        self.assertTrue(self.follower, Followers)
+
+    def tearDown(self):
+        Followers.objects.all().delete()

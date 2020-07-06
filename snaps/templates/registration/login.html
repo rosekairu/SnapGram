@@ -1,0 +1,29 @@
+{% extends 'base.html' %} {% block content%}
+<form action="/accounts/login/" method="POST">
+    <div class="row">
+        <div class="col l4 m4 s12"></div>
+        <div class="col l4 m4 s12">
+            <div class="card">
+                <div class="card-content">
+                    <h4 class="center">SnapGram</h4>
+                    {% if form.errors %}
+                    <div class="card-panel red white-text">{{form.errors}}</div>
+                    {% endif %} {% csrf_token %}
+                    <label for="username">Username</label>
+                    <input placeholder="username" id="username" type="text" class="validate" name="username">
+                    <label for="password">Password</label>
+                    <input placeholder="password" id="password" type="password" class="validate" name="password">
+                    <br>
+                    <input type="submit" value="login" class="btn blue" style="width:100%">
+                    <input type="hidden" name="next" value="{{next}}">
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content center">
+                    <p>Don't have an account? <a href="/accounts/register">Sign Up</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

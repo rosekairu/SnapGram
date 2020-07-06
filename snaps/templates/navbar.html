@@ -1,50 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-
-<body>
-    <div class="navbar fixed-top bg-white" >
-        <nav class="container bg-white" >
-                <a href="{%url 'insta-home'  %}"><i class="fab fa-instagram"> Instagram </i> </a>
-                
-            <span class="navbar-brand mb-0 h1">
-                <a href="/">
-                    <div id="brand" class="instaicon logo d-none d-sm-block"></div>
-                    <div class="instaicon mainicon d-block d-sm-none"></div>
-                </a>
-            </span>
-            <form class="mb-0 h1 ml-auto mr-auto" id="searchform">
-                <input name="search" autocomplete="off" id="searching" class="form-control d-none d-md-block"
-                    placeholder="Search">
-                <i class="spinner "></i>
-            </form>
-            <span class="pull-right">
-                <div class="instaicon disc"></div>
-                <div class="instaicon like"></div>
-
-            </span>
-            
-
-            <!-- Navbar Right Side -->
-            <div class="navbar-nav" id="inline">
-                {% if user.is_authenticated%}
-                <a class="nav-item nav-link" href="{% url 'post-create' %}">Uploads </a>
-                <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
-                <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
-                {% else %}
-                <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
-                <a class="nav-item nav-link" href="{% url 'register' %}">Register</a>
-                {% endif %}
+<nav>
+    <div class="nav-wrapper white">
+      <a href="/" class="brand-logo black-text ml-1">SnapGram</a>
+      <a href="#" data-target="mobile-side" class="sidenav-trigger black-text"><i class="material-icons">menu</i></a>
+      <ul class="right hide-on-med-and-down mr-2">
+        <li><a href="/" class="black-text"><i class="material-icons">explore</i></a></li>
+        <li><a href="/create/post" class = "black-text"><i class = "material-icons">add_a_photo</i></a></li>
+        <li><a href="/myprofile" class = "black-text"><i class = "material-icons">account_circle</i></a></li>
+        
+        <li>
+          <form class = "ml-2" action = "/search"> 
+            <div class="input-field black-text">
+              <input id="search" type="search" required placeholder="Search" name = "q">
+              <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+              <i class="material-icons">close</i>
             </div>
-
-        </nav>
+          </form>
+        </li>
+      </ul>
     </div>
-</body>
-
-</html>
+    
+  </nav>
+  <ul class="sidenav" id="mobile-side">
+    <li><a href="/" class="black-text"><i class="material-icons">explore</i>Explore</a></li>
+    <li><a href="/create/post" class = "black-text"><i class = "material-icons">add_a_photo</i>New Photo</a></li>
+    <li><a href="/myprofile" class = "black-text"><i class = "material-icons">account_circle</i>Profile</a></li>
+  </ul>
