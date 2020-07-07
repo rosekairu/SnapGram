@@ -79,7 +79,7 @@ class Image(models.Model):
 class Comment(models.Model, ModelMethods):
     comment = models.TextField()
     user = models.ForeignKey(User, on_delete = models.CASCADE)
-    image = models.ForeignKey(Image, on_delete = models.CASCADE)
+    image = models.ForeignKey(Image, on_delete = models.CASCADE, default=None)
 
 class Followers(models.Model, ModelMethods):
     user = models.ForeignKey(User, on_delete = models.CASCADE, related_name="users")
