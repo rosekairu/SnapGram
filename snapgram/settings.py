@@ -20,7 +20,6 @@ import django_heroku
 
 MODE=config("MODE", default="dev")
 
-AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -148,13 +147,11 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 # Cloudinary config - You need to create a free claudinary account.
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': config('CLOUDINARY_API_KEY'),
-    'API_SECRET': config('CLOUDINARY_API_SECRET'),
-    'secure': True
-}
-
+cloudinary.config( 
+  cloud_name = 'dmmebaanc', 
+  api_key = '574514783354568', 
+  api_secret = '7aLtX_SU3-Dh-qzdtXjgKirolPI', 
+)
 
 # Email configurations remember to install python-decouple
 EMAIL_USE_TLS = config('EMAIL_USE_TLS')
