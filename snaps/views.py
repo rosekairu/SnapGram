@@ -127,4 +127,4 @@ def follow_user(request, user_id):
 def logout_user(request):
     logout(request)
 
-    return redirect('snaps:index')
+    return redirect('/')
