@@ -1,23 +1,21 @@
-{% extends 'base.html' %}
-
-{% block content %}
-<div class = "container">
-    <div class = "row">
+{% extends 'base.html' %} {% load cloudinary %} {% block content %}
+<div class="container">
+    <div class="row">
         <br>
         <br>
-        <div class = "col l4 m4 s12"></div>
-        <div class = "col l4 m4 s12">
+        <div class="col l4 m4 s12"></div>
+        <div class="col l4 m4 s12">
             {{form.errors}}
-            <form action = "/create/post" method="POST" enctype='multipart/form-data'>
-                {% csrf_token %}
-                {{form.image.label}}<br>
-                {{form.image}}<br><br>
-                {{form.image_name.label}}<br>
-                {{form.image_name}}<br><br>
-                {{form.caption.label}}<br>
-                {{form.caption}}<br>
+            <form action="/create/post" method="POST" enctype='multipart/form-data'>
+                {% csrf_token %} {{form.image.label}}
+                <br> {{form.image}}
+                <br><br> {{form.image_name.label}}
+                <br> {{form.image_name}}
+                <br><br> {{form.caption.label}}
+                <br> {{form.caption}}
                 <br>
-                <input type = "submit" class = "btn right" value="POST">
+                <br>
+                <input type="submit" class="btn right" value="POST">
             </form>
         </div>
     </div>

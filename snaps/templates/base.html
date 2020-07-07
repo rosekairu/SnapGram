@@ -1,4 +1,4 @@
-{% load bootstrap4 %} {% load static%}
+{% load bootstrap4 %} {% load static%} {% load cloudinary %}
 <!DOCTYPE html>
 <html>
 
@@ -7,7 +7,7 @@
     <title>SnapGram</title>
     {% block styles %} {% bootstrap_css %}
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="{% static 'images/favicon.ico'%}" rel="icon" />
+    <link href="{% static 'imgs/favicon.ico'%}" rel="icon" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="{% static 'css/index1.css' %}"> {% endblock %}
 

@@ -43,7 +43,7 @@ def create_post(request):
             image.user = current_user
             image.save()
 
-            return redirect("instagram:index")
+            return redirect("/")
     else:
         form = ImageForm()
 
@@ -71,9 +71,9 @@ def like_image(request, image_id):
         image_like = ImageLike(user=current_user, image = image)
         image_like.save()
     else:
-        return redirect('instagram:index')
+        return redirect('/')
 
-    return redirect('instagram:image', image_id)
+    return redirect('snaps:image', image_id)
 
 def user_profile(request, username):
     search_user = User.objects.filter(username=username).first()
@@ -85,7 +85,7 @@ def user_profile(request, username):
 
         all_images = Image.objects.filter(user = search_user).all()
     else:
-        return redirect('instagram:index')
+        return redirect('snaps:index')
 
     return render(request, 'uprofile.html', {'profile': user_profile, 'images': all_images, 'followers': user_followers, 'following': user_following})
 
@@ -98,11 +98,11 @@ def comment_image(request, image_id):
         if image and request.GET.get('comment'):
             new_comment = Comment(user = current_user, image = image, comment=request.GET.get('comment'))
             new_comment.save()
-            return redirect('instagram:image', image_id)
+            return redirect('snaps:image', image_id)
         else:
-            return redirect('instagram:image', image_id)
+            return redirect('snaps:image', image_id)
     else:
-        return redirect('instagram:index')
+        return redirect('snaps:index')
 
 @login_required(login_url='/accounts/login')
 def follow_user(request, user_id):
@@ -112,19 +112,19 @@ def follow_user(request, user_id):
 
     if tobe_user is None:
         print("Did this")
-        return redirect('instagram:index')
+        return redirect('snaps:index')
 
     if user_follow:
-        return redirect('instagram:profile', tobe_user.username)
+        return redirect('snaps:profile', tobe_user.username)
     else:
         new_follow = Followers(user = tobe_user, follower = current_user)
         new_follow.save()
 
-    return redirect('instagram:profile', tobe_user.username)
+    return redirect('snaps:profile', tobe_user.username)
 
 
 @login_required(login_url='/accounts/login')
 def logout_user(request):
     logout(request)
 
-    return redirect('instagram:index')
+    return redirect('snaps:index')
