@@ -29,8 +29,13 @@
             {% if images %} {% for image in images %}
             <div class="col l3 m6 s6">
                 <a href="/image/{{image.id}}">
+                    <p><span style="font-weight: bold;">{{image.caption}}</span>
+                        <a href="/image/update/{{image.id}}"><i class="material-icons right black-text">update</i></a> </p>
                     <img src="{{image.image.url}}" class="hoverable" width="100%">
                 </a>
+                <div class="col-s6" style="background-color: gray;">
+                    <a href="/image/delete/{{image.id}}"><i class="material-icons">delete</i></a>
+                </div>
             </div>
             {% endfor %} {% else %}
             <br><br>
