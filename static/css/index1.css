@@ -75,6 +75,14 @@ li a {
     border-radius: 1rem;
 }
 
+.card-content a p {
+    visibility: hidden;
+}
+
+.card-content a:hover p {
+    visibility: visible;
+}
+
 #footer1 li {
     padding: 10px;
     font-size: 10px;

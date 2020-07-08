@@ -4,7 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User as AbstractUser
 from django.contrib.auth import logout
-from .forms import ImageForm
+from .forms import ImageForm,NewProfileForm
 from .email import send_welcome_email
 from .models import Profile, User, Image, Comment, ImageLike, Followers
 
@@ -14,19 +14,20 @@ from .models import Profile, User, Image, Comment, ImageLike, Followers
 def index(request):
     current_user = request.user
     all_images = Image.objects.all()
-    return render(request, 'index.html', {'images': all_images})
+    return render(request, 'index.html', {'current_user':current_user,'images': all_images})
 
 
 @login_required(login_url='/accounts/login/')
-def create_profile(request):
+def update_profile(request):
     current_user = request.user
+    form = NewProfileForm()
     if request.method == 'POST':
         form = NewProfileForm(request.POST, request.FILES)
         if form.is_valid():
             profile = form.save(commit=False)
             profile.account_holder = current_user
             profile.save()
-        return redirect('myprofile')
+        return redirect('snaps:myprofile')
 
     else:
         form = NewProfileForm()
@@ -48,6 +49,22 @@ def myprofile(request):
     all_images = Image.objects.filter(user = current_user).all()
 
     return render(request, 'profile.html', {'user': current_user, 'images': all_images, 'profile' : profile})
+
+
+@login_required(login_url='/accounts/login/')
+def change_profile_photo(request):
+    current_user = request.user
+    try:
+        profile = Profile.objects.get(user = current_user)
+    except Profile.DoesNotExist:
+        raise Http404()
+    
+    if request.method == 'POST':
+        profile.profile_photo = request.FILES['imgs']        
+        profile.update_profile()
+        return redirect('snaps:myprofile')
+    
+    return render(request, 'update-pp.html')
 
 
 @login_required(login_url='/accounts/login')
@@ -116,11 +133,31 @@ def update_caption(request, image_id):
         raise Http404()
 
         
-def search(request):
-    if request.GET['q']:
-        users = Profile.search_by_username(request.GET['q'])
+@login_required(login_url='/accounts/login/')
+def search_profile(request):
+    users=User.objects.all()    
 
-    return render(request, 'search.html', {'users': users})
+    if 'username' in request.GET and request.GET["username"]:
+        search_term = request.GET.get("username")        
+        this_user=None
+        try:
+            this_user = User.objects.get(username = search_term)            
+        except User.DoesNotExist:
+            pass 
+
+        profile = None
+        try:
+            profile = Profile.objects.get(account_holder = this_user) 
+        except Profile.DoesNotExist:
+            pass          
+        
+        message = f"{search_term}"
+
+        return render(request, 'search.html',{"message":message, "profile":profile})
+
+    else:
+        blank_message = "You haven't searched for any user."
+        return render(request, 'search.html',{"blank_message":blank_message})
 
 def view_image(request, image_id):
     curr_image = Image.objects.filter(pk = image_id).first()
@@ -153,6 +190,7 @@ def user_profile(request, username):
 
         all_images = Image.objects.filter(user = search_user).all()
     else:
+        
         return redirect('index')
 
     return render(request, 'uprofile.html', {'profile': user_profile, 'images': all_images, 'followers': user_followers, 'following': user_following})

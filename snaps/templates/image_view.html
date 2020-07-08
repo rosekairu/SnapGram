@@ -2,38 +2,38 @@
 <div class="row">
     <div class="col l3 m3 s12"></div>
     <div class="col l6 m6 s12">
-        <div class="card" style="margin-right: 2.5in;">
-            <div class="card-content">
-                <img src="{{image.user.profile.profile_photo.url}}" alt="" class="circle left" width="30px" height="30px">
-                <a href="/profile/{{image.user.username}}" class="black-text ml-1" style="font-weight: bold;">{{image.user.username}}</a>
+        <div class="card">
+            <div class=" card-content ">
+                <img src="{{image.user.profile.profile_photo.url}} " alt=" " class="circle left " width="30px " height="30px ">
+                <a href="/profile/{{image.user.username}} " class="black-text ml-1 " style="font-weight: bold; ">{{image.user.username}}</a>
             </div>
-            <div class="card-image">
-                <img src="{{image.image.url}}">
+            <div class="card-image ">
+                <img src="{{image.image.url}} ">
             </div>
-            <div class="card-content">
-                <div class="container-fluid">
-                    <a href="/image/like/{{image.id}}"><i class="material-icons">favorite_border</i></a>
-                    <i class="material-icons ml-1">chat_bubble_outline</i></div>
-                <p style="font-weight: bold;">{{image.likes}} likes</p>
-                <p><span style="font-weight: bold;">{{image.user.username}}</span> {{image.caption}}</p>
+            <div class="card-content ">
+                <div class="container-fluid ">
+                    <a href="/image/like/{{image.id}} "><i class="material-icons ">favorite_border</i></a>
+                    <i class="material-icons ml-1 ">chat_bubble_outline</i></div>
+                <p style="font-weight: bold; ">{{image.likes}} likes</p>
+                <p><span style="font-weight: bold; ">{{image.caption}}</span></p>
             </div>
-            <div class="card-action">
+            <div class="card-action ">
                 {% csrf_token %}
-                <form action="/image/comment/{{image.id}}" method="GET">
-                    <div class="">
-                        <div class="">
-                            <input id="comment" type="text" class="validate" placeholder="Comment" name="comment">
+                <form action="/image/comment/{{image.id}} " method="GET ">
+                    <div class=" ">
+                        <div class=" ">
+                            <input id="comment " type="text " class="validate " placeholder="Comment " name="comment ">
                         </div>
                     </div>
                 </form>
             </div>
             <br>
         </div>
-        <div class="ml-1"><span>Comments ({{image.comment_set.all | length}})</span></div>
-        <ul class="collection">
+        <div class="ml-1 "><span>Comments ({{image.comment_set.all | length}})</span></div>
+        <ul class="collection ">
             {% for comment in image.comment_set.all %}
             <li>
-                <div class="collection-item"><span style="font-weight: bold;">{{comment.user.username}}</span> <span>{{comment.comment}}</span></div>
+                <div class="collection-item "><span style="font-weight: bold; ">{{comment.user.username}}</span> <span>{{comment.comment}}</span></div>
             </li>
             {% endfor %}
         </ul>

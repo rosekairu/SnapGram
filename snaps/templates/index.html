@@ -3,11 +3,11 @@
     <div class="col l3 m3 s12"></div>
     <div class="col l5 m5 s12">
         {% for image in images %}
-        <div class="card" style="margin-right: 2.5in;">
+        <div class="card" style="justify-content: center;">
             <div class="card-content">
-                <img src="{{image.user.profile.profile_photo.url}}" alt="" class="circle left" width="30px" height="30px">
+                <img src="{{image.user.profile.profile_photo.url}}" alt="" class="circle left" width="30px" height="30px"> &nbsp;
                 <a href="/profile/{{image.user.username}}" class="black-text ml-1" style="font-weight: bold;">{{image.user.username}}</a>
-                <a href="/image/{{image.id}}"><i class="material-icons right black-text">preview</i></a>
+                <a href="/image/{{image.id}}"><i class="material-icons right black-text">preview<p>view</p></i> </a>
             </div>
             <div class="card-image">
                 <img src="{{image.image.url}}">
@@ -17,7 +17,7 @@
                     <a href="/image/like/{{image.id}}"><i class="material-icons">favorite_border</i></a>
                     <i class="material-icons ml-1">chat_bubble_outline</i></div>
                 <p style="font-weight: bold;">{{image.likes}} likes</p>
-                <p><span style="font-weight: bold;">{{image.user.username}}</span> {{image.caption}}</p>
+                <p><span style="font-weight: bold;"># {{image.caption}}</span> </p>
             </div>
             <div class="card-action">
                 <p>Comments ({{image.comment_set.all | length}})</p>
