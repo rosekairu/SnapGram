@@ -23,12 +23,12 @@ from django_registration.backends.one_step.views import RegistrationView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/register/',
-        RegistrationView.as_view(success_url='/myprofile'),
+        RegistrationView.as_view(success_url='/accounts/login/'),
         name='django_registration_register'),
     path('accounts/login/', auth_views.LoginView.as_view(extra_context={'next': '/'}), name='django_registration_login'),
     path('accounts/', include('django_registration.backends.one_step.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path("logout/", auth_views.LogoutView.as_view()),  
-    path('', include('snaps.urls')),
+    path('', include(('snaps.urls','snaps'), namespace='snaps')),
     url(r'^tinymce/', include('tinymce.urls')),
 ]

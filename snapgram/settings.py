@@ -14,6 +14,7 @@ import os
 import dj_database_url
 from decouple import config,Csv
 import cloudinary
+import cloudinary.uploader
 import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -148,10 +149,11 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Cloudinary config - You need to create a free claudinary account.
 cloudinary.config( 
-  cloud_name : config('CLOUDINARY_CLOUD_NAME'),
-  api_key : config('CLOUDINARY_API_KEY'),
-  api_secret : config('CLOUDINARY_API_SECRET'), 
+  cloud_name = 'dmmebaanc', 
+  api_key = '574514783354568', 
+  api_secret = '7aLtX_SU3-Dh-qzdtXjgKirolPI', 
 )
+
 
 # Email configurations remember to install python-decouple
 EMAIL_USE_TLS = config('EMAIL_USE_TLS')

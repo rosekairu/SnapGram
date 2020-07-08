@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
+import datetime as dt
 
 class ModelMethods:
     """
@@ -44,7 +45,7 @@ class ModelMethods:
 
 
 class Profile(models.Model, ModelMethods):
-    profile_photo = CloudinaryField('profile_photo', default = "image/upload/v1583754861/person_placeholder_l8auvx.jpg")
+    profile_photo = CloudinaryField('profile_photo', default = "image/upload/v1594203074/profile_saedp5.png")
     bio = models.TextField(default = '')
     user = models.OneToOneField(User, on_delete = models.CASCADE, default=None)
 
@@ -58,6 +59,7 @@ class Image(models.Model):
     image_name = models.CharField(max_length=32)
     caption = models.TextField()
     user = models.ForeignKey(User, on_delete = models.CASCADE)
+    post_date = models.DateTimeField(auto_now_add=True,null=True, blank=True )
     
     likes = models.IntegerField(default=0)
 
@@ -75,6 +77,9 @@ class Image(models.Model):
     def get_user_images(cls, search_user):
         all_images = cls.objects.filter(user = search_user).all()
         return all_images
+
+    class Meta:
+        ordering = ['-post_date']
 
 class Comment(models.Model, ModelMethods):
     comment = models.TextField()

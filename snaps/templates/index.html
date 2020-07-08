@@ -3,11 +3,11 @@
     <div class="col l3 m3 s12"></div>
     <div class="col l5 m5 s12">
         {% for image in images %}
-        <div class="card">
+        <div class="card" style="margin-right: 2.5in;">
             <div class="card-content">
                 <img src="{{image.user.profile.profile_photo.url}}" alt="" class="circle left" width="30px" height="30px">
                 <a href="/profile/{{image.user.username}}" class="black-text ml-1" style="font-weight: bold;">{{image.user.username}}</a>
-                <a href="/image/{{image.id}}"><i class="material-icons right black-text">open_in_new</i></a>
+                <a href="/image/{{image.id}}"><i class="material-icons right black-text">preview</i></a>
             </div>
             <div class="card-image">
                 <img src="{{image.image.url}}">

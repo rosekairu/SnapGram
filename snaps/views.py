@@ -85,7 +85,7 @@ def user_profile(request, username):
 
         all_images = Image.objects.filter(user = search_user).all()
     else:
-        return redirect('snaps:index')
+        return redirect('index')
 
     return render(request, 'uprofile.html', {'profile': user_profile, 'images': all_images, 'followers': user_followers, 'following': user_following})
 
@@ -100,27 +100,27 @@ def comment_image(request, image_id):
             new_comment.save()
             return redirect('snaps:image', image_id)
         else:
-            return redirect('snaps:image', image_id)
+            return redirect('image', image_id)
     else:
-        return redirect('snaps:index')
+        return redirect('/')
 
 @login_required(login_url='/accounts/login')
 def follow_user(request, user_id):
     current_user = request.user
     user_follow = Followers.objects.filter(follower=current_user).first()
-    tobe_user = User.objects.filter(pk = user_id).first()
+    follow_user = User.objects.filter(pk = user_id).first()
 
-    if tobe_user is None:
+    if follow_user is None:
         print("Did this")
-        return redirect('snaps:index')
+        return redirect('/')
 
     if user_follow:
-        return redirect('snaps:profile', tobe_user.username)
+        return redirect('snaps:profile', follow_user.username)
     else:
-        new_follow = Followers(user = tobe_user, follower = current_user)
+        new_follow = Followers(user = follow_user, follower = current_user)
         new_follow.save()
 
-    return redirect('snaps:profile', tobe_user.username)
+    return redirect('snaps:profile', follow_user.username)
 
 
 @login_required(login_url='/accounts/login')

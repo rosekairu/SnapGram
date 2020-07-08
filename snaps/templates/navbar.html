@@ -1,27 +1,35 @@
 <nav>
     <div class="nav-wrapper white">
-      <a href="/" class="brand-logo black-text ml-1">SnapGram</a>
-      <a href="#" data-target="mobile-side" class="sidenav-trigger black-text"><i class="material-icons">menu</i></a>
-      <ul class="right hide-on-med-and-down mr-2">
-        <li><a href="/" class="black-text"><i class="material-icons">explore</i></a></li>
-        <li><a href="/create/post" class = "black-text"><i class = "material-icons">add_a_photo</i></a></li>
-        <li><a href="/myprofile" class = "black-text"><i class = "material-icons">account_circle</i></a></li>
-        
-        <li>
-          <form class = "ml-2" action = "/search"> 
-            <div class="input-field black-text">
-              <input id="search" type="search" required placeholder="Search" name = "q">
-              <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-              <i class="material-icons">close</i>
-            </div>
-          </form>
-        </li>
-      </ul>
+        <a href="/" class="brand-logo black-text ml-1">SnapGram</a>
+        <a href="#" data-target="mobile-side" class="sidenav-trigger black-text"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down mr-2">
+            <li><a href="/" class="black-text"><i class="material-icons">explore</i></a></li>
+            <li><a href="/create/post" class="black-text"><i class = "material-icons">add_a_photo</i></a></li>
+            <li><a href="/myprofile" class="black-text"><i class = "material-icons">account_circle</i></a></li>
+            {% if user.is_authenticated %}
+            <li><a href="/logout" class="btn btn-default">Logout</a></li> {% else %}
+            <li>
+                <a class='btn btn-default' href="/accounts/login">Login</a>
+            </li>
+
+            {% endif %}
+
+            <li>
+                <form class="ml-2" action="/search">
+                    <div class="input-field black-text">
+                        <input id="search" type="search" required placeholder="Search" name="q">
+                        <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                        <i class="material-icons">close</i>
+                    </div>
+                </form>
+            </li>
+        </ul>
+
     </div>
-    
-  </nav>
-  <ul class="sidenav" id="mobile-side">
+
+</nav>
+<ul class="sidenav" id="mobile-side">
     <li><a href="/" class="black-text"><i class="material-icons">explore</i>Explore</a></li>
-    <li><a href="/create/post" class = "black-text"><i class = "material-icons">add_a_photo</i>New Photo</a></li>
-    <li><a href="/myprofile" class = "black-text"><i class = "material-icons">account_circle</i>Profile</a></li>
-  </ul>
+    <li><a href="/create/post" class="black-text"><i class = "material-icons">add_a_photo</i>New Photo</a></li>
+    <li><a href="/myprofile" class="black-text"><i class = "material-icons">account_circle</i>Profile</a></li>
+</ul>
