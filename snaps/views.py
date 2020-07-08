@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http  import HttpResponse,Http404,HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User as AbstractUser
 from django.contrib.auth import logout
-from .forms import ImageForm,NewProfileForm
+from .forms import ImageForm,UserUpdateForm, ProfileUpdateForm
 from .email import send_welcome_email
 from .models import Profile, User, Image, Comment, ImageLike, Followers
 
@@ -19,19 +20,26 @@ def index(request):
 
 @login_required(login_url='/accounts/login/')
 def update_profile(request):
-    current_user = request.user
-    form = NewProfileForm()
-    if request.method == 'POST':
-        form = NewProfileForm(request.POST, request.FILES)
-        if form.is_valid():
-            profile = form.save(commit=False)
-            profile.account_holder = current_user
-            profile.save()
-        return redirect('snaps:myprofile')
+    if request.method == 'POST':    
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
 
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, f'Your account has been updated.')
+            return redirect('snaps:myprofile')
     else:
-        form = NewProfileForm()
-    return render(request, 'new-profile.html', {"form": form})
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+
+
+    context = {
+        'u_form':u_form,
+        'p_form':p_form
+    }
+
+    return render(request, 'profile.html', context)
 
 
 @login_required(login_url='/accounts/login/')
@@ -52,7 +60,7 @@ def myprofile(request):
 
 
 @login_required(login_url='/accounts/login/')
-def change_profile_photo(request):
+def update_profile_photo(request):
     current_user = request.user
     try:
         profile = Profile.objects.get(user = current_user)
@@ -60,12 +68,11 @@ def change_profile_photo(request):
         raise Http404()
     
     if request.method == 'POST':
-        profile.profile_photo = request.FILES['imgs']        
-        profile.update_profile()
+        
         return redirect('snaps:myprofile')
     
     return render(request, 'update-pp.html')
-
+    
 
 @login_required(login_url='/accounts/login')
 def create_post(request):
