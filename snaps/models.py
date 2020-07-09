@@ -45,7 +45,8 @@ class ModelMethods:
 
 
 class Profile(models.Model, ModelMethods):
-    profile_photo = models.ImageField(upload_to = 'profile_photo/', default = "profile.png")
+    image = models.ImageField(upload_to='images/', default=None)
+    profile_photo = models.ImageField(upload_to = 'profile_photo/', default = "image/upload/v1594245831/media/profile_photo/profile_mgr0hh.png")
     bio = models.TextField(default = '')
     user = models.OneToOneField(User, on_delete = models.CASCADE, default=None)
 
