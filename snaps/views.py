@@ -213,8 +213,6 @@ def comment_image(request, image_id):
             new_comment = Comment(user = current_user, image = image, comment=request.GET.get('comment'))
             new_comment.save()
             return redirect('snaps:image', image_id)
-        else:
-            return redirect('image', image_id)
     else:
         return redirect('/')
 

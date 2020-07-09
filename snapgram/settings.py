@@ -14,7 +14,7 @@ import os
 import dj_database_url
 from decouple import config,Csv
 import cloudinary
-import cloudinary.uploader
+#import cloudinary.uploader
 import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -43,11 +43,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary_storage',
     'snaps',
     'bootstrap4',
-    'bootstrap3',
     'cloudinary',
-    'cloudinary_storage',
+    'bootstrap3',
     'crispy_forms',
 ]
 
@@ -87,13 +87,16 @@ WSGI_APPLICATION = 'snapgram.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+# development
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': config('DB_NAME'),
     }
-}
+ }
 
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -144,15 +147,16 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # configuring the location for media
 MEDIA_URL = '/media/'
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 # Cloudinary config - You need to create a free claudinary account.
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': config('CLOUDINARY_API_KEY'),
-    'API_SECRET': config('CLOUDINARY_API_SECRET'),
+    'CLOUD_NAME': 'hpxmrlhxr',
+    'API_KEY': '365435461149629',
+    'API_SECRET': 'C95D9mttsgqaKpqH1VYsCWIPqKA',
     'secure': True
 }
 
