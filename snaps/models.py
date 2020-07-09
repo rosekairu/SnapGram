@@ -46,7 +46,6 @@ class ModelMethods:
 
 class Profile(models.Model, ModelMethods):
     profile_photo = models.ImageField(upload_to = 'profile_photo/', default = "profile.png")
-    #profile_photo = CloudinaryField('profile_photo', default = "image/upload/v1594203074/profile_saedp5.png")
     bio = models.TextField(default = '')
     user = models.OneToOneField(User, on_delete = models.CASCADE, default=None)
 

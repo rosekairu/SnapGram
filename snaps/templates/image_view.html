@@ -15,7 +15,7 @@
                     <a href="/image/like/{{image.id}} "><i class="material-icons ">favorite_border</i></a>
                     <i class="material-icons ml-1 ">chat_bubble_outline</i></div>
                 <p style="font-weight: bold; ">{{image.likes}} likes</p>
-                <p><span style="font-weight: bold; ">{{image.caption}}</span></p>
+                <p><span style="font-weight: bold; ">#{{image.caption}}</span></p>
             </div>
             <div class="card-action ">
                 {% csrf_token %}
