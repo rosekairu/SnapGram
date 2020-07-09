@@ -3,55 +3,55 @@
 <div class="container">
     <div class="row">
         <div class="col l1 m1 s12"></div>
-        <div class="col l2 2 s12 " style="border-radius: 50%;">
-            <img class="rounded-circle account-img" src="{{profile.profile_photo.url}}" alt="{{profile.user.username}}">
+        <div class=" col l2 2 s12 ">
+            <img src="{{profile.profile_photo.url}} " width="180px " height="180px " style="border-radius: 50%; ">
 
         </div>
-        <div class="col l1 m1 s12"></div>
-        <div class="col l6 m7 s12">
+        <div class="col l1 m1 s12 "></div>
+        <div class="col l6 m7 s12 ">
 
-            <div class="inline">
-                <h4 class="account-heading">{{user.username}}</h4>
-                <p class="text-secondary">{{user.email}}</p>
-                <span class="ig-bold-text">Bio:</span> <br>
-                <span class="ig-bold-text">Posts</span> <b>
+            <div class="inline ">
+                <h4 class="account-heading ">{{user.username}}</h4>
+                <p class="text-secondary ">{{user.email}}</p>
+                <span class="ig-bold-text ">Bio:</span> <br>
+                <span class="ig-bold-text ">Posts</span> <b>
                 <span>{{images | length}}</span>&nbsp; <br>
-                <span class="ig-bold-text">Followers</span>
+                <span class="ig-bold-text ">Followers</span>
                 <span>0</span>&nbsp; <br>
-                <span class="ig-bold-text">Following</span>
+                <span class="ig-bold-text ">Following</span>
                 <span>0</span>
             </div> <br> <br>
-            <form method="POST" enctype="multipart/form-data">
+            <form method="POST " enctype="multipart/form-data ">
                 {%csrf_token%}
-                <fieldset class="form-group">
-                    <legend class="border-bottom mb-4">Profile Info</legend>
+                <fieldset class="form-group ">
+                    <legend class="border-bottom mb-4 ">Profile Info</legend>
                     {{u_form|crispy}}
                     {{p_form|crispy}}
                 </fieldset>
-                <div class="form-group">
-                    <button class="btn btn-primary" type="submit"> Update Profile </button>
+                <div class="form-group ">
+                    <button class="btn btn-primary " type="submit "> Update Profile </button>
                 </div>
             </form>
         </div>
     </div>
     <hr>
-    <div class="container">
+    <div class="container ">
         <br>
-        <div class="row">
+        <div class="row ">
             {% if images %} {% for image in images %}
-            <div class="col l3 m6 s6">
-                <a href="/image/{{image.id}}">
-                    <p><span style="font-weight: bold;">{{image.caption}}</span>
-                        <a href="/image/update/{{image.id}}"><i class="material-icons right black-text">update</i></a> </p>
-                    <img src="{{image.image.url}}" class="hoverable" width="100%">
+            <div class="col l3 m6 s6 ">
+                <a href="/image/{{image.id}} ">
+                    <p><span style="font-weight: bold; ">{{image.caption}}</span>
+                        <a href="/image/update/{{image.id}} "><i class="material-icons right black-text ">update</i></a> </p>
+                    <img src="{{image.image.url}} " class="hoverable " width="100% ">
                 </a>
-                <div class="col-s6" style="background-color: gray;">
-                    <a href="/image/delete/{{image.id}}"><i class="material-icons">delete</i></a>
+                <div class="col-s6 " style="background-color: gray; ">
+                    <a href="/image/delete/{{image.id}} "><i class="material-icons ">delete</i></a>
                 </div>
             </div>
             {% endfor %} {% else %}
             <br><br>
-            <p class="center">You have no images</p>
+            <p class="center ">You have no images</p>
             {% endif%}
         </div>
     </div>
