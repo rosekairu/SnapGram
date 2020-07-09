@@ -10,7 +10,7 @@ A cloned version of popular photo-gallery website instagram.
 
 ## Live Link
 
-[View Site](https://mysnapgram.herokuapp.com/)
+[View Site](https://mysnapgram.herokuapp.com/accounts/login/?next=/)
 
 ### Setup/Installation Requirements
 
