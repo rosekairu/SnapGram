@@ -90,6 +90,20 @@ class Comment(models.Model, ModelMethods):
     user = models.ForeignKey(User, on_delete = models.CASCADE)
     image = models.ForeignKey(Image, on_delete = models.CASCADE, default=None)
 
+    def __str__(self):
+        return self.comment
+
+    def save_comment(self):
+        self.save()
+    
+    @classmethod
+    def update_comment(cls,id,new_comment):
+        cls.objects.filter(id=id).update(comment = new_comment)
+
+    @classmethod
+    def delete_comment(cls,id):
+        cls.objects.filter(id).delete()
+
 class Followers(models.Model, ModelMethods):
     user = models.ForeignKey(User, on_delete = models.CASCADE, related_name="users")
     follower = models.ForeignKey(User, on_delete = models.CASCADE, related_name="followers")
