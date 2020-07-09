@@ -154,11 +154,12 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Cloudinary config - You need to create a free claudinary account.
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'hpxmrlhxr',
-    'API_KEY': '365435461149629',
-    'API_SECRET': 'C95D9mttsgqaKpqH1VYsCWIPqKA',
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': config('CLOUDINARY_API_KEY'),
+    'API_SECRET': config('CLOUDINARY_API_SECRET'),
     'secure': True
 }
+
 
 
 # Email configurations remember to install python-decouple
